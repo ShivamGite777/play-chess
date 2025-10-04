@@ -1,7 +1,9 @@
 node_modules/
 .env
+.env.*
 # Backend ignores
 server/.env
+server/.env.*
 server/prisma/*.db
 server/prisma/*.sqlite
 server/prisma/*.sqlite3
