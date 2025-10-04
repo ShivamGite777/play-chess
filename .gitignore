@@ -1,2 +1,9 @@
 node_modules/
 .env
+# Backend ignores
+server/.env
+server/prisma/*.db
+server/prisma/*.sqlite
+server/prisma/*.sqlite3
+server/prisma/*-journal
+server/dist/
