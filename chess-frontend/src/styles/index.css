@@ -1,0 +1,351 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --toast-bg: #ffffff;
+  --toast-color: #111827;
+  --toast-border: #e5e7eb;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: theme('colors.white');
+  color: theme('colors.gray.900');
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark body {
+  background-color: theme('colors.gray.900');
+  color: theme('colors.gray.100');
+}
+
+/* Chess board specific styles */
+.chess-board {
+  background-image: 
+    linear-gradient(45deg, #f0d9b5 25%, transparent 25%),
+    linear-gradient(-45deg, #f0d9b5 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f0d9b5 75%),
+    linear-gradient(-45deg, transparent 75%, #f0d9b5 75%);
+  background-size: 60px 60px;
+  background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+}
+
+.dark .chess-board {
+  background-image: 
+    linear-gradient(45deg, #b58863 25%, transparent 25%),
+    linear-gradient(-45deg, #b58863 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #b58863 75%),
+    linear-gradient(-45deg, transparent 75%, #b58863 75%);
+}
+
+/* Pattern overlay for colorblind users */
+.pattern-overlay .chess-board {
+  background-image: 
+    linear-gradient(45deg, #f0d9b5 25%, transparent 25%),
+    linear-gradient(-45deg, #f0d9b5 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f0d9b5 75%),
+    linear-gradient(-45deg, transparent 75%, #f0d9b5 75%),
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+}
+
+.dark.pattern-overlay .chess-board {
+  background-image: 
+    linear-gradient(45deg, #b58863 25%, transparent 25%),
+    linear-gradient(-45deg, #b58863 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #b58863 75%),
+    linear-gradient(-45deg, transparent 75%, #b58863 75%),
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px);
+}
+
+/* Piece styles */
+.chess-piece {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+}
+
+.chess-piece:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.chess-piece.dragging {
+  z-index: 1000;
+  transform: scale(1.2);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+
+/* Square styles */
+.chess-square {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.chess-square.highlighted {
+  background-color: rgba(74, 222, 128, 0.3) !important;
+}
+
+.chess-square.last-move {
+  background-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.chess-square.check {
+  background-color: rgba(239, 68, 68, 0.5) !important;
+  animation: checkFlash 0.5s ease-in-out;
+}
+
+.chess-square.possible-move::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.chess-square.possible-capture::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(239, 68, 68, 0.8);
+  border-radius: 2px;
+}
+
+/* Timer styles */
+.timer {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.timer.low-time {
+  color: #ef4444;
+  animation: timerPulse 1s ease-in-out infinite;
+}
+
+.timer.critical-time {
+  color: #dc2626;
+  animation: timerPulse 0.5s ease-in-out infinite;
+}
+
+/* Chat styles */
+.chat-message {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Modal styles */
+.modal-overlay {
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Confetti styles */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #2d2d2d 25%, #3d3d3d 50%, #2d2d2d 75%);
+  background-size: 200% 100%;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles */
+.focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+.high-contrast .chess-square.highlighted {
+  background-color: rgba(255, 255, 0, 0.8) !important;
+}
+
+.high-contrast .chess-square.check {
+  background-color: rgba(255, 0, 0, 0.8) !important;
+}
+
+.high-contrast .chess-square.last-move {
+  background-color: rgba(0, 255, 0, 0.8) !important;
+}
+
+/* Animations */
+@keyframes pieceMove {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pieceCapture {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(5deg); }
+  100% { transform: scale(0) rotate(10deg); }
+}
+
+@keyframes checkFlash {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: #ff6b6b; }
+}
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes confetti {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  0% { transform: translateY(-100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* Responsive design utilities */
+@media (max-width: 768px) {
+  .chess-board {
+    background-size: 40px 40px;
+    background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+  }
+  
+  .chess-piece {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chess-board {
+    background-size: 30px 30px;
+    background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
+  }
+  
+  .chess-piece {
+    font-size: 1.5rem;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .chess-board {
+    background: white !important;
+    color: black !important;
+  }
+}

@@ -1,213 +1,215 @@
-# Chess Multiplayer Frontend
+# Chess Multiplayer Frontend - Revamped
 
-A modern, responsive multiplayer chess game built with Next.js, TypeScript, and Tailwind CSS.
+A modern, production-ready frontend for a real-time multiplayer chess application built with React, TypeScript, and Vite.
 
-## Features
+## 🚀 Features
 
-### 🎮 Core Gameplay
-- **Full Chess Implementation**: All FIDE rules including castling, en passant, pawn promotion, check, checkmate, stalemate
-- **Real-time Multiplayer**: WebSocket-based real-time gameplay with live move synchronization
-- **Multiple Time Controls**: Bullet (1 min), Blitz (3-5 min), Rapid (10-30 min), Classical (30+ min)
-- **Increment/Delay Modes**: Fischer increment and Bronstein/Simple delay support
-- **Live Timers**: Real-time countdown timers with low-time warnings
-- **Move Validation**: Server-side validation using chess.js (never trust client)
+### Core Gameplay
+- **Dynamic 8x8 chessboard** with alternating square colors
+- **Drag-and-drop piece movement** with visual feedback
+- **Click-to-move alternative** for accessibility
+- **Animated piece transitions** using CSS transforms (300ms easing)
+- **Move validation** with immediate visual feedback
+- **Captured pieces display** on both sides of the board
+- **Move history panel** with algebraic notation
+- **Game timer** with countdown for timed matches
+- **Check/checkmate visual indicators**
 
-### 🎨 UI/UX Design
-- **Modern Interface**: Clean, intuitive design with smooth animations
-- **Dark/Light Themes**: Automatic theme detection with manual toggle
-- **Responsive Design**: Optimized for mobile, tablet, and desktop
-- **Smooth Animations**: 300-500ms transitions for piece movements
-- **Drag & Drop**: Intuitive piece movement with click-to-move alternative
-- **Board Flip**: Switch perspective option
-- **Visual Feedback**: Legal move highlighting, check indicators, last move highlighting
+### Real-Time Multiplayer
+- **WebSocket integration** for live move synchronization
+- **Opponent connection status** with latency indicator
+- **Game state updates** and reconnection handling
+- **Chat messages** (optional)
 
-### 🔊 Sound Effects
-- **Comprehensive Audio**: Move sounds, capture sounds, check alerts, victory fanfare
-- **Contextual Sounds**: Different sounds for different actions (castling, promotion, etc.)
-- **Timer Warnings**: Urgent ticking sounds for low time
-- **Mute Toggle**: Easy sound control with volume adjustment
+### User Interface
+- **Modern responsive design** optimized for all devices
+- **Dark/Light theme** with system preference detection
+- **Accessibility features** (WCAG 2.1 AA compliant)
+- **Sound effects** with volume control
+- **Smooth animations** and transitions
 
-### 🏆 Game Features
-- **Game Lobby**: Browse and join available games
-- **Player Profiles**: Avatars, ratings, statistics
-- **Chat System**: In-game chat with emoji support
-- **Draw Offers**: Offer, accept, or decline draw requests
-- **Resignation**: Clean resignation handling
-- **Spectator Mode**: Watch games in real-time
-- **Game History**: Move history with algebraic notation
-- **PGN Export**: Save games in standard format
+## 🛠 Technology Stack
 
-### ♿ Accessibility
-- **Keyboard Navigation**: Full keyboard support
-- **Screen Reader**: Compatible with screen readers
-- **High Contrast**: High contrast mode option
-- **Font Sizing**: Adjustable font sizes
-- **Focus Management**: Proper focus indicators
-
-## Tech Stack
-
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand
+- **Framework**: React 18+ with TypeScript
+- **Build Tool**: Vite for fast development
+- **Styling**: Tailwind CSS with CSS Grid/Flexbox
+- **State Management**: Context API for global state
+- **WebSocket**: Socket.io-client for real-time communication
+- **Chess Logic**: chess.js library for move validation
 - **Animations**: Framer Motion
-- **Chess Logic**: chess.js
-- **Real-time**: Socket.io Client
-- **Notifications**: React Hot Toast
-- **Sound**: Howler.js
 - **Icons**: Lucide React
-- **Effects**: React Confetti
+- **Routing**: React Router DOM
 
-## Getting Started
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   ├── Board/              # Chess board components
+│   │   ├── Board.tsx      # Main board component
+│   │   ├── Square/         # Square component
+│   │   └── Piece/          # Piece component
+│   ├── Game/               # Game-related components
+│   ├── Lobby/              # Lobby components
+│   ├── Auth/               # Authentication components
+│   ├── Profile/            # User profile components
+│   └── shared/             # Shared components
+│       ├── Layout/         # Layout components
+│       ├── Navigation/     # Navigation components
+│       └── Modal/          # Modal components
+├── contexts/               # React contexts
+│   ├── ThemeContext.tsx    # Theme management
+│   ├── AuthContext.tsx     # Authentication state
+│   └── WebSocketContext.tsx # WebSocket management
+├── hooks/                  # Custom React hooks
+├── utils/                  # Utility functions
+│   ├── api.ts             # API client
+│   └── sounds.ts          # Sound effects
+├── types/                  # TypeScript type definitions
+└── styles/                 # Global styles
+    └── index.css          # Tailwind CSS and custom styles
+```
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Backend API running (see backend README)
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd chess-frontend
-   ```
-
-2. **Install dependencies**
+1. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. **Set up environment variables**
+2. **Set up environment variables**
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    ```
    
-   Update `.env.local` with your backend API URL:
+   Update `.env` with your backend API URL:
    ```env
-   NEXT_PUBLIC_API_URL=http://localhost:3000
-   NEXT_PUBLIC_WS_URL=ws://localhost:3000
+   VITE_API_URL=http://localhost:3000
+   VITE_WS_URL=ws://localhost:3000
    ```
 
-4. **Start the development server**
+3. **Start development server**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
+4. **Open your browser**
    Navigate to [http://localhost:3001](http://localhost:3001)
 
-## Project Structure
+## 🎮 Usage
 
-```
-src/
-├── app/                    # Next.js App Router pages
-│   ├── auth/              # Authentication pages
-│   ├── game/              # Game pages
-│   ├── lobby/             # Lobby page
-│   └── profile/           # Profile pages
-├── components/            # React components
-│   ├── chess/            # Chess-specific components
-│   ├── game/             # Game UI components
-│   ├── ui/               # Reusable UI components
-│   └── providers.tsx     # App providers
-├── lib/                   # Utility libraries
-│   ├── api.ts            # API client
-│   ├── socket.ts         # WebSocket manager
-│   └── sounds.ts         # Sound effects
-├── stores/               # Zustand stores
-│   ├── authStore.ts      # Authentication state
-│   ├── gameStore.ts      # Game state
-│   └── settingsStore.ts  # User settings
-├── types/                # TypeScript type definitions
-└── utils/                # Utility functions
-```
+### Basic Gameplay
+1. **Select a piece** by clicking on it
+2. **Move the piece** by clicking on a highlighted square
+3. **Drag and drop** pieces for intuitive movement
+4. **Use keyboard navigation** for accessibility
 
-## Key Components
+### Keyboard Shortcuts
+- `Tab` - Navigate through interactive elements
+- `Arrow Keys` - Navigate board squares
+- `Enter/Space` - Select and move pieces
+- `Escape` - Cancel piece selection
+- `?` - Show help overlay
+- `Ctrl + Z` - Request takeback
+- `Ctrl + D` - Offer draw
 
-### Chess Board (`ChessBoard.tsx`)
-- Interactive chess board with piece movement
-- Legal move highlighting
-- Drag and drop support
-- Visual feedback for checks and captures
+### Accessibility Features
+- **Screen reader support** with proper ARIA labels
+- **Keyboard navigation** for all functionality
+- **High contrast mode** for better visibility
+- **Pattern overlay** for colorblind users
+- **Scalable UI** with rem/em units
 
-### Game Timer (`GameTimer.tsx`)
-- Real-time countdown timers
-- Low time warnings with visual indicators
-- Sound alerts for critical time
+## 🎨 Customization
 
-### WebSocket Manager (`socket.ts`)
-- Handles real-time communication
-- Automatic reconnection
-- Event handling for all game actions
+### Themes
+The app supports three theme modes:
+- **Light**: Traditional chess colors
+- **Dark**: Dark theme with navy/teal squares
+- **Auto**: Follows system preference
 
-### Sound Manager (`sounds.ts`)
-- Comprehensive sound effects
-- Volume control
-- Context-aware audio feedback
+### Sound Effects
+- Move piece sounds
+- Capture sounds
+- Check alerts
+- Game end sounds
+- Toggle-able with volume control
 
-## State Management
-
-The app uses Zustand for state management with three main stores:
-
-- **AuthStore**: User authentication and profile data
-- **GameStore**: Current game state, moves, and UI state
-- **SettingsStore**: User preferences and settings
-
-## API Integration
-
-The frontend communicates with the backend through:
-
-- **REST API**: Authentication, game management, user data
-- **WebSocket**: Real-time game events, moves, chat
-
-## Responsive Design
-
-The app is fully responsive with breakpoints:
-- **Mobile**: < 768px
-- **Tablet**: 768px - 1024px  
-- **Desktop**: > 1024px
-
-## Performance Optimizations
-
-- **Code Splitting**: Automatic route-based splitting
-- **Image Optimization**: Next.js Image component
-- **Bundle Analysis**: Built-in bundle analyzer
-- **Lazy Loading**: Components loaded on demand
-- **Memoization**: React.memo for expensive components
-
-## Testing
+## 🧪 Testing
 
 ```bash
 # Run tests
 npm test
 
-# Run tests in watch mode
-npm run test:watch
-
 # Run tests with coverage
 npm run test:coverage
+
+# Run tests in watch mode
+npm run test:ui
 ```
 
-## Building for Production
+## 📦 Building for Production
 
 ```bash
 # Build the application
 npm run build
 
-# Start production server
-npm start
+# Preview production build
+npm run preview
 ```
 
-## Deployment
+## 🚀 Deployment
 
 The app can be deployed to:
-- **Vercel** (recommended for Next.js)
+- **Vercel** (recommended for Vite)
 - **Netlify**
 - **Railway**
 - **Docker** (see Dockerfile)
 
-## Contributing
+## 🔧 Development
+
+### Code Quality
+- **TypeScript strict mode** enabled
+- **ESLint** for code linting
+- **Prettier** for code formatting
+- **Component structure** following React best practices
+
+### Performance Optimizations
+- **Code splitting** by route
+- **Lazy loading** for components
+- **Memoization** with React.memo
+- **Debounced WebSocket events**
+- **Optimized bundle** with manual chunks
+
+## 📱 Responsive Design
+
+### Breakpoints
+- **Mobile**: 320px - 767px
+- **Tablet**: 768px - 1023px
+- **Desktop**: 1024px+
+
+### Mobile Optimizations
+- **Touch-friendly targets** (minimum 44x44px)
+- **Swipe gestures** for navigation
+- **Collapsible panels** for move history
+- **Virtual keyboard handling**
+
+## 🎯 Performance Metrics
+
+Target performance goals:
+- **Lighthouse Score**: 90+ (Performance, Accessibility, Best Practices)
+- **Move Latency**: <100ms
+- **Bundle Size**: <500KB gzipped
+- **First Contentful Paint**: <1.5s
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -215,11 +217,11 @@ The app can be deployed to:
 4. Add tests if applicable
 5. Submit a pull request
 
-## License
+## 📄 License
 
 MIT License - see LICENSE file for details.
 
-## Support
+## 🆘 Support
 
 For issues and questions:
 - Create an issue in the repository
