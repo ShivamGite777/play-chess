@@ -1,0 +1,125 @@
+// Prisma schema for the multiplayer chess backend
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum GameStatus {
+  active
+  completed
+  abandoned
+}
+
+enum GameResult {
+  white_wins
+  black_wins
+  draw
+}
+
+enum EndReason {
+  checkmate
+  resignation
+  timeout
+  stalemate
+  draw_agreement
+}
+
+enum PlayerColor {
+  white
+  black
+}
+
+enum GameMode {
+  bullet
+  blitz
+  rapid
+  classical
+}
+
+enum DelayMode {
+  none
+  fischer
+  bronstein
+  simple
+}
+
+model User {
+  id            String   @id @default(cuid())
+  username      String   @unique
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  avatarUrl     String?  @map("avatar_url")
+
+  eloRating     Int      @default(1200) @map("elo_rating")
+  gamesPlayed   Int      @default(0)    @map("games_played")
+  gamesWon      Int      @default(0)    @map("games_won")
+  gamesLost     Int      @default(0)    @map("games_lost")
+  gamesDrawn    Int      @default(0)    @map("games_drawn")
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  whiteGames    Game[]   @relation("whitePlayer")
+  blackGames    Game[]   @relation("blackPlayer")
+}
+
+model Game {
+  id                 String      @id @default(cuid())
+  whitePlayerId      String?     @map("white_player_id")
+  blackPlayerId      String?     @map("black_player_id")
+  whitePlayer        User?       @relation("whitePlayer", fields: [whitePlayerId], references: [id])
+  blackPlayer        User?       @relation("blackPlayer", fields: [blackPlayerId], references: [id])
+
+  gameMode           GameMode    @map("game_mode")
+  timeControl        Int         @map("time_control") // minutes per player
+  incrementSeconds   Int         @default(0) @map("increment_seconds")
+  delaySeconds       Int?        @map("delay_seconds")
+  delayMode          DelayMode   @default(none) @map("delay_mode")
+
+  fenPosition        String      @map("fen_position")
+  pgn                String      @default("")
+
+  whiteTimeRemaining Int         @map("white_time_remaining") // milliseconds
+  blackTimeRemaining Int         @map("black_time_remaining") // milliseconds
+  activeColor        PlayerColor @default(white) @map("active_color")
+  timerLastStamp     DateTime    @default(now()) @map("timer_last_stamp")
+
+  status             GameStatus  @default(active)
+  result             GameResult? 
+  winnerId           String?     @map("winner_id")
+  endReason          EndReason?  @map("end_reason")
+
+  createdAt          DateTime    @default(now()) @map("created_at")
+  completedAt        DateTime?   @map("completed_at")
+
+  moves              Move[]
+
+  @@index([status, createdAt])
+  @@index([whitePlayerId])
+  @@index([blackPlayerId])
+}
+
+model Move {
+  id           String      @id @default(cuid())
+  gameId       String      @map("game_id")
+  game         Game        @relation(fields: [gameId], references: [id])
+  moveNumber   Int         @map("move_number")
+  playerColor  PlayerColor @map("player_color")
+  fromSquare   String      @map("from_square")
+  toSquare     String      @map("to_square")
+  piece        String
+  notation     String
+  capturedPiece String?     @map("captured_piece")
+  isCheck      Boolean      @default(false) @map("is_check")
+  isCheckmate  Boolean      @default(false) @map("is_checkmate")
+  isCastling   Boolean      @default(false) @map("is_castling")
+  timeTaken    Int          @map("time_taken") // milliseconds
+  timestamp    DateTime     @default(now())
+
+  @@index([gameId, moveNumber])
+}
