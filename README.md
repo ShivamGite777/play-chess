@@ -299,13 +299,46 @@ See `.env.example` for all available environment variables.
 
 ## Deployment
 
-### Docker (Recommended)
-```bash
-# Build image
-docker build -t chess-api .
+### ⚠️ Important: Netlify Limitations
 
-# Run container
+**Netlify is designed for static sites and has limitations for this Node.js API:**
+- ❌ No WebSocket support (Socket.io won't work)
+- ❌ No persistent connections
+- ❌ No Redis caching
+- ❌ Limited database connection pooling
+
+**For full functionality, use one of these platforms:**
+
+### 1. Railway.app (Recommended)
+```bash
+npm install -g @railway/cli
+railway login
+railway init
+railway up
+```
+
+### 2. Render.com
+- Connect GitHub repository
+- Set build command: `npm run build`
+- Set start command: `npm start`
+- Add PostgreSQL and Redis services
+
+### 3. Docker (VPS)
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+
+# Or manual deployment
+docker build -t chess-api .
 docker run -p 3000:3000 --env-file .env chess-api
+```
+
+### 4. Heroku
+```bash
+heroku create your-chess-api
+heroku addons:create heroku-postgresql:hobby-dev
+heroku addons:create heroku-redis:hobby-dev
+git push heroku main
 ```
 
 ### Manual Deployment
@@ -313,6 +346,8 @@ docker run -p 3000:3000 --env-file .env chess-api
 2. Configure environment variables
 3. Run database migrations
 4. Start the application with PM2 or similar process manager
+
+**See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.**
 
 ## Contributing
 
